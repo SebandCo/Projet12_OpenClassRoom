@@ -1,12 +1,15 @@
 import mysql.connector
 
+HOST = "localhost"
+DATABASE = "epicevents"
 
-def connexion_epicevents_bdd():
+
+def connexion_epicevents_bdd(HOST, user, password, DATABASE):
     db = mysql.connector.connect(
-        host="localhost",
-        user="adminepicevents",
-        password="mdpepicevents",
-        database="epicevents"
+        host=HOST,
+        user=user,
+        password=password,
+        database=DATABASE
     )
     cursor = db.cursor()
     return db, cursor
@@ -19,7 +22,11 @@ def deconnexion_epicevents_bdd(cursor, db):
 
 
 def browse_enterprise():
-    db, cursor = connexion_epicevents_bdd()
+    # A supprimer quand page de connexion valide et fonctionnel
+    user = "adminepicevents"
+    password = "mdpepicevents"
+
+    db, cursor = connexion_epicevents_bdd(HOST, user, password, DATABASE)
     cursor.execute("SELECT name FROM enterprise")
     enterprises = cursor.fetchall()
     deconnexion_epicevents_bdd(cursor, db)
