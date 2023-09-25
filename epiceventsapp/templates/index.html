@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <title>Connexion Epic Events</title>
+    </head>
+    <body>
+        <h1>Bienvenu sur la page de Connexion à la base de données Epic Events</h1>
+        Merci de commencer par vous identifier
+        <form action = "acceuil" method="post">
+            <label for="user">Identifiant :</label>
+            <input type="text" name="user"><br>
+            <label for="password">Mot de passe :</label>
+            <input type="password" name="password"><br>
+            <button type="submit">Enter</button>
+        </form>
+
+        {% if message %}
+        <p>{{message}}</p>
+        {% endif%}
+
+    </body>
+</html>

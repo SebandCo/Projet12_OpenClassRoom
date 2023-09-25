@@ -21,6 +21,19 @@ def deconnexion_epicevents_bdd(cursor, db):
     return
 
 
+def control_user(user, password):
+    valid_user = False
+    error_message = ""
+    try:
+        connexion_epicevents_bdd(HOST, user, password, DATABASE)
+        valid_user = True
+    except mysql.connector.errors.ProgrammingError as err:
+        valid_user = False
+        error_message = err.errno
+
+    return valid_user, error_message
+
+
 def browse_enterprise():
     # A supprimer quand page de connexion valide et fonctionnel
     user = "adminepicevents"
