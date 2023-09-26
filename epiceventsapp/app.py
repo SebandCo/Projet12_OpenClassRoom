@@ -13,6 +13,7 @@ def index():
 @app.route("/acceuil", methods=["POST"])
 def acceuil():
     user = request.form.get("user")
+    # Manque chiffrement du mot de passe
     password = request.form.get("password")
     valid_user, error_message = bdd.control_user(user, password)
     if valid_user:

@@ -29,7 +29,10 @@ def control_user(user, password):
         valid_user = True
     except mysql.connector.errors.ProgrammingError as err:
         valid_user = False
-        error_message = err.errno
+        if err.errno == 1045:
+            error_message = "Erreur 1045 : L'utilisateur n'est pas connu de la base de données ou le mot de passe est incorrect"
+        else:
+            error_message = f"Erreur {err.errno}"
 
     return valid_user, error_message
 
