@@ -1,15 +1,23 @@
 import mysql.connector
+import configparser
 
-HOST = "localhost"
-DATABASE = "epicevents"
+# Créer un objet ConfigParser et lire le fichier de config
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Déclaration des champs d'accès à la base de données
+CONFIG_HOST = config['database']['host']
+CONFIG_USER = config['database']['user']
+CONFIG_PASSWORD = config['database']['password']
+CONFIG_DATABASE = config['database']['database']
 
 
-def connexion_epicevents_bdd(HOST, user, password, DATABASE):
+def connexion_epicevents_bdd():
     db = mysql.connector.connect(
-        host=HOST,
-        user=user,
-        password=password,
-        database=DATABASE
+        host=CONFIG_HOST,
+        user=CONFIG_USER,
+        password=CONFIG_PASSWORD,
+        database=CONFIG_DATABASE
     )
     cursor = db.cursor()
     return db, cursor
@@ -21,29 +29,21 @@ def deconnexion_epicevents_bdd(cursor, db):
     return
 
 
-def control_user(user, password):
-    valid_user = False
+def control_user(identifiant, password):
+    valid_identifiant = False
     error_message = ""
     try:
-        connexion_epicevents_bdd(HOST, user, password, DATABASE)
-        valid_user = True
+        connexion_epicevents_bdd()
+        valid_identifiant = True
     except mysql.connector.errors.ProgrammingError as err:
-        valid_user = False
+        valid_identifiant = False
         if err.errno == 1045:
             error_message = "Erreur 1045 : L'utilisateur n'est pas connu de la base de données ou le mot de passe est incorrect"
         else:
             error_message = f"Erreur {err.errno}"
 
-    return valid_user, error_message
+    return valid_identifiant, error_message
 
 
-def browse_enterprise():
-    # A supprimer quand page de connexion valide et fonctionnel
-    user = "adminepicevents"
-    password = "mdpepicevents"
-
-    db, cursor = connexion_epicevents_bdd(HOST, user, password, DATABASE)
-    cursor.execute("SELECT name FROM enterprise")
-    enterprises = cursor.fetchall()
-    deconnexion_epicevents_bdd(cursor, db)
-    return enterprises
+def creation_user(user):
+    pass
