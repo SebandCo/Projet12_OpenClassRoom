@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <title>Home Epic Events</title>
+    </head>
+    <body>
+        <h1>Bienvenu sur la liste des menus</h1>
+        Où voulez vous aller : 
+        <p>
+            <a href="{{ url_for('user_home') }}">Gestion des utilisateurs</a>
+        </p>
+        {% if message %}
+        <p>{{message}}</p>
+        {% endif%}
+
+    </body>
+</html>
