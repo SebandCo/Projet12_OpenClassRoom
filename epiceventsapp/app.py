@@ -35,6 +35,7 @@ def user_creation():
         if len(message) > 0:
             return render_template("user_templates/user_creation.html", message=message)
         else:
+            print (user)
             message = f"L'utilisateur {user['surname']}, {user['name']} a été rajouté à la base de données"
             return render_template("user_templates/user_home.html", message=message)
 
