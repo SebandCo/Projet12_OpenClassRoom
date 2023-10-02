@@ -1,4 +1,6 @@
 def user_creation(request):
+    message = ""
+
     surname = request.form.get("surname")
     name = request.form.get("name")
     department = request.form.get("department")
@@ -11,4 +13,4 @@ def user_creation(request):
             "name": name,
             "department": department}
 
-    return user
+    return user, message

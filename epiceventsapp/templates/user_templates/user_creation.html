@@ -10,16 +10,25 @@
         Merci de remplir les différents champs pour la création
         <form action = "user_creation" method="post">
             
-            <label for="surname">Prénom :</label>
+            <label for="surname"><strong>Prénom :</strong></label>
             <input type="text" name="surname"><br>
 
-            <label for="name">Nom :</label>
+            <label for="name"><strong>Nom :</strong></label>
             <input type="text" name="name"><br>
             
-            <label for="department">Equipe :</label><br>
+            <label for="department"><strong>Equipe :</strong></label><br>
             <input type="radio" name="department" value="Gestion"/>Gestion<br>
             <input type="radio" name="department" value="Commerciale"/>Commerciale<br>
             <input type="radio" name="department" value="Support"/>Support<br>
+
+            <label for="identifiant"><strong>Identifiant de connexion :</strong></label>
+            <input type="text" name="identifiant"><br>
+
+            <label for="password"><strong>Mot de passe de connexion :</strong></label>
+            <input type="password" name="password"><br>
+
+            <label for="password2"><strong>Confirmation du mot de passe :</strong></label>
+            <input type="password" name="password2"><br>
 
             <button type="submit">Enter</button>
         </form>
