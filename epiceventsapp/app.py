@@ -31,13 +31,18 @@ def user_home():
 @app.route("/user_creation", methods=["POST", "GET"])
 def user_creation():
     if request.method == "POST":
-        user, message = userapp.user_creation(request)
-        if len(message) > 0:
-            return render_template("user_templates/user_creation.html", message=message)
+        # Controle que les données saisies sont correctes
+        user, message_request = userapp.user_creation(request)
+        if len(message_request) > 0:
+            return render_template("user_templates/user_creation.html", message=message_request)
         else:
-            print (user)
-            message = f"L'utilisateur {user['surname']}, {user['name']} a été rajouté à la base de données"
-            return render_template("user_templates/user_home.html", message=message)
+            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
+            message_bdd = bdd.add_user(user)
+            if message_bdd == "":
+                return render_template("user_templates/user_creation.html", message=message_request)
+            else:
+                message = f"L'utilisateur {user['surname']}, {user['name']} a été rajouté à la base de données"
+                return render_template("user_templates/user_home.html", message=message)
 
     return render_template("user_templates/user_creation.html")
 

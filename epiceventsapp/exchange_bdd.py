@@ -29,6 +29,25 @@ def deconnexion_epicevents_bdd(cursor, db):
     return
 
 
+def add_user(user):
+    message = ""
+    db, cursor = connexion_epicevents_bdd()
+    # Préparez la requête SQL
+    query = """
+    INSERT INTO collaborateur (surname, name, department, identifiant, password, salt)
+    VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    values = (user['surname'], user['name'], user['department'], user['identifiant'], user['password'], user['salt'])
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.IntegrityError:
+        message = "Double Identifiant : Cet identifiant est déjà utilisé"
+
+    return message
+
+
 def control_user(identifiant, password):
     valid_identifiant = False
     error_message = ""

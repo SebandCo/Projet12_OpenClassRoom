@@ -34,7 +34,7 @@
         </form>
 
         {% if message %}
-        <p>{{message}}</p>
+            <p>{{ message|replace("\n", "<br>")|safe }}</p>
         {% endif%}
 
     </body>

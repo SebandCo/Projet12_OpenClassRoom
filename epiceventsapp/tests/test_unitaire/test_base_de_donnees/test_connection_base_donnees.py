@@ -14,7 +14,7 @@ database_config = config['database']['database']
 
 def test_database_connection():
     try:
-        db, cursor = exchange_bdd.connexion_epicevents_bdd(host_config, user_config, password_config, database_config)
+        db, cursor = exchange_bdd.connexion_epicevents_bdd()
         cursor = db.cursor()
         cursor.execute("SELECT 1")
     except mysql.connector.Error as error:
