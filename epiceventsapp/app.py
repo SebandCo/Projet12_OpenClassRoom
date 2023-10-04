@@ -37,12 +37,13 @@ def user_creation():
             return render_template("user_templates/user_creation.html", message=message_request)
         else:
             # Controle que l'utilisateur a été correctement ajouté à la base de donnée
+            print(user)
             message_bdd = bdd.add_user(user)
             if message_bdd == "":
-                return render_template("user_templates/user_creation.html", message=message_request)
-            else:
                 message = f"L'utilisateur {user['surname']}, {user['name']} a été rajouté à la base de données"
                 return render_template("user_templates/user_home.html", message=message)
+            else:
+                return render_template("user_templates/user_creation.html", message=message_bdd)
 
     return render_template("user_templates/user_creation.html")
 
