@@ -1,23 +1,19 @@
 import mysql.connector
 import configparser
+import hashlib
+import binascii
 
 # Créer un objet ConfigParser et lire le fichier de config
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# Déclaration des champs d'accès à la base de données
-CONFIG_HOST = config['database']['host']
-CONFIG_USER = config['database']['user']
-CONFIG_PASSWORD = config['database']['password']
-CONFIG_DATABASE = config['database']['database']
 
-
-def connexion_epicevents_bdd():
+def connexion_epicevents_bdd(config_section):
     db = mysql.connector.connect(
-        host=CONFIG_HOST,
-        user=CONFIG_USER,
-        password=CONFIG_PASSWORD,
-        database=CONFIG_DATABASE
+        host=config[config_section]['host'],
+        user=config[config_section]['user'],
+        password=config[config_section]['password'],
+        database=config[config_section]['database']
     )
     cursor = db.cursor()
     return db, cursor
@@ -31,11 +27,11 @@ def deconnexion_epicevents_bdd(cursor, db):
 
 def add_user(user):
     message = ""
-    db, cursor = connexion_epicevents_bdd()
+    db, cursor = connexion_epicevents_bdd("database")
     # Préparez la requête SQL
     query = """
-    INSERT INTO collaborateur (surname, name, department, identifiant, password, salt)
-    VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO collaborateur (surname, name, department, identifiant, password, salt)
+            VALUES (%s, %s, %s, %s, %s, %s)
     """
     values = (user['surname'], user['name'], user['department'], user['identifiant'], user['password'], user['salt'])
     # Essaye d'executer la requête SQL:
@@ -45,24 +41,46 @@ def add_user(user):
     except mysql.connector.IntegrityError:
         message = "Double Identifiant : Cet identifiant est déjà utilisé"
 
+    deconnexion_epicevents_bdd(cursor, db)
     return message
 
 
 def control_user(identifiant, password):
-    valid_identifiant = False
-    error_message = ""
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database_identification")
+    # Préparez la requête SQL
+    query = """
+            SELECT *
+            FROM collaborateur
+            WHERE identifiant = %s
+    """
+    value = (identifiant,)
+    # Essaye d'executer la requête SQL:
     try:
-        connexion_epicevents_bdd()
-        valid_identifiant = True
-    except mysql.connector.errors.ProgrammingError as err:
-        valid_identifiant = False
-        if err.errno == 1045:
-            error_message = "Erreur 1045 : L'utilisateur n'est pas connu de la base de données ou le mot de passe est incorrect"
+        cursor.execute(query, value)
+        user_result = cursor.fetchone()
+        if user_result is None:
+            valid_identifiant = False
+            message = "- User Unknown : L'utilisateur n'est pas connu de la base de données"
         else:
-            error_message = f"Erreur {err.errno}"
+            user_salt = user_result[7]
+            user_password = user_result[5]
+            password_encode = password.encode('utf-8')
+            hashed_password = binascii.hexlify(hashlib.pbkdf2_hmac('sha256',
+                                                                   password_encode,
+                                                                   user_salt,
+                                                                   100000))
+            password_decode = hashed_password.decode('utf-8')
+            # Si le mot de passe est correct
+            if password_decode == user_password:
+                valid_identifiant = True
+            # Si le mot de passe est incorrect
+            else:
+                valid_identifiant = False
+                message = "- Wrong Password : L'identifiant est connu mais le mot de passe est incorrect"
+    except mysql.connector.Error as err:
+        valid_identifiant = False
+        message = f"Erreur {err.errno}"
 
-    return valid_identifiant, error_message
-
-
-def creation_user(user):
-    pass
+    deconnexion_epicevents_bdd(cursor, db)
+    return valid_identifiant, message

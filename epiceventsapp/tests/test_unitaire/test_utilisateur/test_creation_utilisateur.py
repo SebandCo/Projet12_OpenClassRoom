@@ -1,21 +1,6 @@
-import pytest
-from unittest import mock
 from user_app import user_creation, MAX_LEN_VALUE
 import hashlib
 import binascii
-
-
-# Création d'un mock pour l'objet request
-@pytest.fixture
-def mock_request():
-    request = mock.Mock()
-    request.form = {"surname": "Séb",
-                    "name": "Super",
-                    "department": "Gestion",
-                    "identifiant": "Super_Séb",
-                    "password": "Super_password",
-                    "password2": "Super_password"}
-    return request
 
 
 def test_good_user(mock_request):
