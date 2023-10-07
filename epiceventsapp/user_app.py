@@ -1,8 +1,36 @@
 import os
 import hashlib
 import binascii
+import exchange_bdd as bdd
 
 MAX_LEN_VALUE = 70
+
+
+def control_user(identifiant, password):
+
+    user_result, message = bdd.control_user_bdd(identifiant)
+
+    if user_result is None:
+        valid_identifiant = False
+        message = "- User Unknown : L'utilisateur n'est pas connu de la base de données"
+    else:
+        user_salt = user_result[7]
+        user_password = user_result[5]
+        password_encode = password.encode('utf-8')
+        hashed_password = binascii.hexlify(hashlib.pbkdf2_hmac('sha256',
+                                                               password_encode,
+                                                               user_salt,
+                                                               100000))
+        password_decode = hashed_password.decode('utf-8')
+        # Si le mot de passe est correct
+        if password_decode == user_password:
+            valid_identifiant = True
+        # Si le mot de passe est incorrect
+        else:
+            valid_identifiant = False
+            message = "- Wrong Password : L'identifiant est connu mais le mot de passe est incorrect"
+
+    return valid_identifiant, message
 
 
 def user_creation(request):

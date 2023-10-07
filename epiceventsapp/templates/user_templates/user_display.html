@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+        <title>Gestion Utilisateur Epic Events</title>
+    </head>
+    <body>
+        <h1>Bienvenu sur la partie Affichage des Utilisateurs</h1>
+        Voici la liste des collaborateurs : 
+        <table>
+            <caption>Liste des collaborateurs</caption>
+            <tr>
+                <th>Nom</th>
+                <th>Identifiant</th>
+                <th>Equipe</th>
+            </tr>
+            {% for collaborateur in liste_user %}
+                <tr>
+                    <td>{{collaborateur.complet_name}}</td>
+                    <td>{{collaborateur.identifiant}}</td>
+                    <td>{{collaborateur.department}}</td>
+                </tr>
+            {%endfor%}
+        </table>
+
+        {% if message %}
+        <p>{{message}}</p>
+        {% endif%}
+
+    </body>
+</html>

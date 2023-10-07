@@ -1,7 +1,6 @@
 import mysql.connector
 import configparser
-import hashlib
-import binascii
+
 
 # Créer un objet ConfigParser et lire le fichier de config
 config = configparser.ConfigParser()
@@ -25,6 +24,74 @@ def deconnexion_epicevents_bdd(cursor, db):
     return
 
 
+def client_extract():
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT client.email,
+    client.complet_name,
+    client.phone_number,
+    client.creation_date,
+    client.last_update,
+    collaborateur.complet_name AS collaborateur_complet_name,
+    enterprise.name AS enterprise_name
+    FROM client
+    JOIN collaborateur on client.collaborateur_id = collaborateur.id
+    JOIN enterprise on client.enterprise_id = enterprise.id
+    """
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    except mysql.connector.Error as err:
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
+
+    deconnexion_epicevents_bdd(cursor, db)
+
+    return results, message
+
+
+def contract_extract():
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return
+
+
+def event_extract():
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return
+
+
+# ------------------------------------------------------------------
+# Partie des utilisateurs
+# ------------------------------------------------------------------
+def user_extract():
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT collaborateur.complet_name,
+    collaborateur.department,
+    collaborateur.identifiant
+    FROM collaborateur
+    """
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query)
+        # Transforme le result en dictionnaire pour facilité la lecture
+        results = [{'complet_name': row[0],
+                    'department': row[1],
+                    'identifiant': row[2]}for row in cursor.fetchall()]
+    except mysql.connector.Error as err:
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
+
+    deconnexion_epicevents_bdd(cursor, db)
+
+    return results, message
+
+
 def add_user(user):
     message = ""
     db, cursor = connexion_epicevents_bdd("database")
@@ -45,9 +112,9 @@ def add_user(user):
     return message
 
 
-def control_user(identifiant, password):
+def control_user_bdd(identifiant, password):
     message = ""
-    db, cursor = connexion_epicevents_bdd("database_identification")
+    db, cursor = connexion_epicevents_bdd("database_select_only")
     # Préparez la requête SQL
     query = """
             SELECT *
@@ -59,28 +126,10 @@ def control_user(identifiant, password):
     try:
         cursor.execute(query, value)
         user_result = cursor.fetchone()
-        if user_result is None:
-            valid_identifiant = False
-            message = "- User Unknown : L'utilisateur n'est pas connu de la base de données"
-        else:
-            user_salt = user_result[7]
-            user_password = user_result[5]
-            password_encode = password.encode('utf-8')
-            hashed_password = binascii.hexlify(hashlib.pbkdf2_hmac('sha256',
-                                                                   password_encode,
-                                                                   user_salt,
-                                                                   100000))
-            password_decode = hashed_password.decode('utf-8')
-            # Si le mot de passe est correct
-            if password_decode == user_password:
-                valid_identifiant = True
-            # Si le mot de passe est incorrect
-            else:
-                valid_identifiant = False
-                message = "- Wrong Password : L'identifiant est connu mais le mot de passe est incorrect"
+
     except mysql.connector.Error as err:
-        valid_identifiant = False
+        user_result = None
         message = f"Erreur {err.errno}"
 
     deconnexion_epicevents_bdd(cursor, db)
-    return valid_identifiant, message
+    return user_result, message

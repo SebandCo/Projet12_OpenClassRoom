@@ -8,7 +8,11 @@
         <h1>Bienvenu sur la liste des menus</h1>
         Où voulez vous aller : 
         <p>
-            <a href="{{ url_for('user_home') }}">Gestion des utilisateurs</a>
+            <a href="{{ url_for('client_home') }}">Gestion des clients</a></br>
+            <a href="{{ url_for('contract_home') }}">Gestion des contrats</a></br>
+            <a href="{{ url_for('event_home') }}">Gestion des événements</a></br>
+            <a href="{{ url_for('enterprise_home') }}">Gestion des entreprises</a></br>
+            <a href="{{ url_for('user_home') }}">Gestion des utilisateurs</a></br>
         </p>
         {% if message %}
         <p>{{message}}</p>

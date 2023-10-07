@@ -1,0 +1,5 @@
+table, caption{
+    border : 1px black solid;
+    width : 400px;
+    text-align : center;
+}

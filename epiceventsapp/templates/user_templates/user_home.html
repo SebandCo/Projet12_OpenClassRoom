@@ -8,7 +8,8 @@
         <h1>Bienvenu sur la partie Gestion des Utilisateurs</h1>
         Où voulez vous aller : 
         <p>
-            <a href="{{ url_for('user_creation') }}">Création des utilisateurs</a>
+            <a href="{{ url_for('user_display') }}">Affichage des utilisateurs</a></br>
+            <a href="{{ url_for('user_creation') }}">Création des utilisateurs</a></br>
         </p>
 
         {% if message %}
