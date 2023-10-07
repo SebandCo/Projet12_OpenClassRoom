@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Evénements Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Affichage des Evénements
+{% endblock en_tete %}
+        
+{% block content %}
+    Voici la liste des événements : 
+    <table>
+        <caption>Liste des événements</caption>
+        <tr>
+            <th>Nom</th>
+            <th>N° événements</th>
+            <th>N° contrat</th>
+            <th>Nom du client</th>
+            <th>Mail du client</th>
+            <th>Téléphone du client</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Contact</th>
+            <th>Localisation</th>
+            <th>N° place</th>
+            <th>Notes</th>
+        </tr>
+        {% for event in liste_event %}
+            <tr>
+                <td>{{event.id}}</td>
+                <td>{{event.name}}</td>
+                <td>{{event.contract_id}}</td>
+                <td>{{event.complet_name}}</td>
+                <td>{{event.email}}</td>
+                <td>{{event.phone_number}}</td>
+                <td>{{event.date_start}}</td>
+                <td>{{event.date_end}}</td>
+                <td>{{event.support_contact}}</td>
+                <td>{{event.location}}</td>
+                <td>{{event.attendees}}</td>
+                <td>{{event.notes}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+{% endblock content %}

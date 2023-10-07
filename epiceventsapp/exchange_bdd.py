@@ -60,9 +60,46 @@ def client_extract():
 # ------------------------------------------------------------------
 def event_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT event.id,
+    event.name,
+    event.contract_id,
+    client.complet_name AS complet_name,
+    client.email AS email,
+    client.phone_number AS phone_number,
+    event.event_date_start,
+    event.event_date_end,
+    event.support_contact,
+    event.location,
+    event.attendees,
+    event.notes
+    FROM event
+    JOIN client on event.client_id = client.id
+    """
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query)
+        # Transforme le result en dictionnaire pour facilité la lecture
+        results = [{'id': row[0],
+                    'name': row[1],
+                    'contract_id': row[2],
+                    'complet_name': row[3],
+                    'email': row[4],
+                    'phone_number': row[5],
+                    'date_start': row[6],
+                    'date_end': row[7],
+                    'support_contact': row[8],
+                    'location': row[9],
+                    'attendees': row[10],
+                    'notes': row[11]}for row in cursor.fetchall()]
+    except mysql.connector.Error as err:
+        results = ""
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
 
     deconnexion_epicevents_bdd(cursor, db)
-    return
+
+    return results, message
 
 
 # ------------------------------------------------------------------

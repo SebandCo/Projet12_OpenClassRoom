@@ -22,6 +22,18 @@ def acceuil():
         return render_template("index.html", message=error_message)
 
 
+# ------------------------------------------------------------------
+# Chemin des événements
+# ------------------------------------------------------------------
+@app.route("/event_display")
+def event_display():
+    results, message = bdd.event_extract()
+    if len(message) > 0:
+        return render_template("event_templates/event_home.html", message=message)
+    else:
+        return render_template("event_templates/event_display.html", liste_event=results)
+
+
 @app.route("/event_home")
 def event_home():
     return render_template("event_templates/event_home.html")
@@ -49,7 +61,7 @@ def contract_display():
     if len(message) > 0:
         return render_template("contract_templates/contract_home.html", message=message)
     else:
-        return render_template("contract_templates/contract_display.html", liste_entreprise=results)
+        return render_template("contract_templates/contract_display.html", liste_contract=results)
 
 
 # ------------------------------------------------------------------
