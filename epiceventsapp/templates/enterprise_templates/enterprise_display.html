@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Enterprise Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Affichage des Enterprises
+{% endblock en_tete %}
+        
+{% block content %}
+    Voici la liste des entreprises : 
+    <table>
+        <caption>Liste des entreprises</caption>
+        <tr>
+            <th>Nom</th>
+            <th>Date de creation</th>
+        </tr>
+        {% for entreprise in liste_entreprise %}
+            <tr>
+                <td>{{entreprise.name}}</td>
+                <td>{{entreprise.creation_date}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+{% endblock content %}

@@ -1,41 +1,37 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <title>Gestion Utilisateur Epic Events</title>
-    </head>
-    <body>
-        <h1>Bienvenu sur la partie Création des Utilisateurs</h1>
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Utilisateur Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Création des Utilisateurs
+{% endblock en_tete %}
         
-        Merci de remplir les différents champs pour la création
-        <form action = "user_creation" method="post">
-            
-            <label for="surname"><strong>Prénom :</strong></label>
-            <input type="text" name="surname"><br>
+{% block content %}
+    Merci de remplir les différents champs pour la création
+    <form action = "user_creation" method="post">
+        
+        <label for="surname"><strong>Prénom :</strong></label>
+        <input type="text" name="surname"><br>
 
-            <label for="name"><strong>Nom :</strong></label>
-            <input type="text" name="name"><br>
-            
-            <label for="department"><strong>Equipe :</strong></label><br>
-            <input type="radio" name="department" value="management"/>Gestion<br>
-            <input type="radio" name="department" value="commercial"/>Commerciale<br>
-            <input type="radio" name="department" value="support"/>Support<br>
+        <label for="name"><strong>Nom :</strong></label>
+        <input type="text" name="name"><br>
+        
+        <label for="department"><strong>Equipe :</strong></label><br>
+        <input type="radio" name="department" value="management"/>Gestion<br>
+        <input type="radio" name="department" value="commercial"/>Commerciale<br>
+        <input type="radio" name="department" value="support"/>Support<br>
 
-            <label for="identifiant"><strong>Identifiant de connexion :</strong></label>
-            <input type="text" name="identifiant"><br>
+        <label for="identifiant"><strong>Identifiant de connexion :</strong></label>
+        <input type="text" name="identifiant"><br>
 
-            <label for="password"><strong>Mot de passe de connexion :</strong></label>
-            <input type="password" name="password"><br>
+        <label for="password"><strong>Mot de passe de connexion :</strong></label>
+        <input type="password" name="password"><br>
 
-            <label for="password2"><strong>Confirmation du mot de passe :</strong></label>
-            <input type="password" name="password2"><br>
+        <label for="password2"><strong>Confirmation du mot de passe :</strong></label>
+        <input type="password" name="password2"><br>
 
-            <button type="submit">Enter</button>
-        </form>
-
-        {% if message %}
-            <p>{{ message|replace("\n", "<br>")|safe }}</p>
-        {% endif%}
-
-    </body>
-</html>
+        <button type="submit">Enter</button>
+    </form>
+{% endblock content %}

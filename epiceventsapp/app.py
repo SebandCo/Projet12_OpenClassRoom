@@ -48,7 +48,11 @@ def contract_home():
 # ------------------------------------------------------------------
 @app.route("/enterprise_home")
 def enterprise_home():
-    return render_template("event_templates/enterprise_home.html")
+    results, message = bdd.enterprise_extract()
+    if len(message) > 0:
+        return render_template("enterprise_templates/enterprise_home.html", message=message)
+    else:
+        return render_template("enterprise_templates/enterprise_display.html", liste_entreprise=results)
 
 
 # ------------------------------------------------------------------
@@ -62,7 +66,6 @@ def user_home():
 @app.route("/user_display")
 def user_display():
     results, message = bdd.user_extract()
-    print(results)
     if len(message) > 0:
         return render_template("user_templates/user_home.html", message=message)
     else:

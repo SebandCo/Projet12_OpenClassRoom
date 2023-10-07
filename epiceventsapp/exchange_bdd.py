@@ -66,6 +66,31 @@ def event_extract():
 
 
 # ------------------------------------------------------------------
+# Partie des entreprises
+# ------------------------------------------------------------------
+def enterprise_extract():
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT enterprise.name,
+    enterprise.creation_date,
+    FROM enterprise
+    """
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query)
+        # Transforme le result en dictionnaire pour facilité la lecture
+        results = [{'name': row[0],
+                    'creation_date': row[1]}for row in cursor.fetchall()]
+    except mysql.connector.Error as err:
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
+
+    deconnexion_epicevents_bdd(cursor, db)
+
+    return results, message
+
+
+# ------------------------------------------------------------------
 # Partie des utilisateurs
 # ------------------------------------------------------------------
 def user_extract():

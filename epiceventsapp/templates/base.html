@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+        <title>{% block title %}{% endblock title %}</title>
+    </head>
+    <body>
+        <h1>
+            Bienvenu sur la partie
+            {% block en_tete %}{% endblock en_tete %}
+        </h1>
+
+        {% block content %}{% endblock content %}
+    
+        {% if message %}
+        <p>{{message}}</p>
+        {% endif%}
+
+    </body>
+</html>

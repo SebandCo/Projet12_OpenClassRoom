@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <title>Gestion Utilisateur Epic Events</title>
-    </head>
-    <body>
-        <h1>Bienvenu sur la partie Gestion des Utilisateurs</h1>
-        Où voulez vous aller : 
-        <p>
-            <a href="{{ url_for('user_display') }}">Affichage des utilisateurs</a></br>
-            <a href="{{ url_for('user_creation') }}">Création des utilisateurs</a></br>
-        </p>
+{% extends 'base.html' %}
 
-        {% if message %}
-        <p>{{message}}</p>
-        {% endif%}
+{% block title %}
+    Gestion Utilisateur Epic Events
+{% endblock title %}
 
-    </body>
-</html>
+{% block en_tete %}
+    Gestion des Utilisateurs
+{% endblock en_tete %}
+        
+{% block content %}
+    Où voulez vous aller : 
+    <p>
+        <a href="{{ url_for('user_display') }}">Affichage des utilisateurs</a></br>
+        <a href="{{ url_for('user_creation') }}">Création des utilisateurs</a></br>
+    </p>
+{% endblock content %}

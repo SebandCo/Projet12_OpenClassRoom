@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <title>Gestion Contrat Epic Events</title>
-    </head>
-    <body>
-        <h1>Bienvenu sur la partie Gestion des contrats</h1>
-        Où voulez vous aller : 
-        <p>
-            
-        </p>
+{% extends 'base.html' %}
 
-        {% if message %}
-        <p>{{message}}</p>
-        {% endif%}
+{% block title %}
+    Gestion Contrat Epic Events
+{% endblock title %}
 
-    </body>
-</html>
+{% block en_tete %}
+    Gestion des Contrat
+{% endblock en_tete %}
+        
+{% block content %}
+    Où voulez vous aller : 
+    <p>
+    </p>
+{% endblock content %}
