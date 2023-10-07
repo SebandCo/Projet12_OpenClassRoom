@@ -1,5 +1,5 @@
 table, caption{
     border : 1px black solid;
-    width : 400px;
+    width : auto;
     text-align : center;
 }

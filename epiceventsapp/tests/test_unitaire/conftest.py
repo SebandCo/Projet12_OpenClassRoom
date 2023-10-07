@@ -7,7 +7,7 @@ import os
 
 # Création d'un mock pour l'objet request
 @pytest.fixture
-def mock_request():
+def mock_user_request():
     request = mock.Mock()
     request.form = {"surname": "Séb",
                     "name": "Super",
@@ -20,7 +20,28 @@ def mock_request():
 
 # Création d'un mock pour l'objet request
 @pytest.fixture
-def mock_user():
+def mock_client_request():
+    request = mock.Mock()
+    request.form = {"surname": "Client",
+                    "name": "Famille",
+                    "email": "client@gmail.com",
+                    "phone_number": "0601020304",
+                    "collaborateur": 1,
+                    "enterprise": 1}
+    return request
+
+
+# Création d'un mock pour l'objet request
+@pytest.fixture
+def mock_enterprise_request():
+    request = mock.Mock()
+    request.form = {"name": "Entreprise Test"}
+    return request
+
+
+# Création d'un mock pour l'objet base de donnée
+@pytest.fixture
+def mock_user_bdd():
     salt = os.urandom(16)
     # Transforme le mot de passe pour l'encoder
     password = "Super_password"
@@ -41,9 +62,9 @@ def mock_user():
     return user
 
 
-# Création d'un mock pour l'objet request
+# Création d'un mock pour l'objet base de donnée
 @pytest.fixture
-def mock_enterprise():
+def mock_enterprise_bdd():
     enterprise = [1,
                   "Super Entreprise"]
     return enterprise

@@ -14,7 +14,7 @@
         {% block content %}{% endblock content %}
     
         {% if message %}
-        <p>{{message}}</p>
+            <p>{{ message|replace("\n", "<br>")|safe }}</p>
         {% endif%}
 
         <p>

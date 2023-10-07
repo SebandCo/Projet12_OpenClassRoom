@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 import exchange_bdd as bdd
 import user_app as userapp
 import enterprise_app as enterpriseapp
+import client_app as clientapp
 
 
 app = Flask(__name__)
@@ -55,6 +56,33 @@ def client_display():
         return render_template("client_templates/client_home.html", message=message)
     else:
         return render_template("client_templates/client_display.html", liste_client=results)
+
+
+@app.route("/client_creation", methods=["POST", "GET"])
+def client_creation():
+    if request.method == "POST":
+        # Controle que les données saisies sont correctes
+        client, message_request = clientapp.client_creation(request, session)
+        if len(message_request) > 0:
+            results, message_extract = bdd.enterprise_extract()
+            message_request += message_extract
+            return render_template("client_templates/client_creation.html", liste_entreprise=results, message=message_request)
+        else:
+            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
+            message_bdd = bdd.add_client(client)
+            if message_bdd == "":
+                message = f"Le client {client['surname']}, {client['name']} a été rajouté à la base de données"
+                return render_template("client_templates/client_home.html", message=message)
+            else:
+                results, message_extract = bdd.enterprise_extract()
+                message += message_extract
+                return render_template("client_templates/client_creation.html", liste_entreprise=results, message=message_bdd)
+    else:
+        results, message = bdd.enterprise_extract()
+        if len(message) > 0:
+            return render_template("client_templates/client_home.html", message=message)
+        else:
+            return render_template("client_templates/client_creation.html", liste_entreprise=results)
 
 
 @app.route("/client_home")

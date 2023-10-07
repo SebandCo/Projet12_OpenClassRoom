@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Client Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Création des Clients
+{% endblock en_tete %}
+        
+{% block content %}
+    Merci de remplir les différents champs pour la création
+    <form action = "client_creation" method="post">
+        
+        <label for="surname"><strong>Prénom :</strong></label>
+        <input type="text" name="surname"><br>
+
+        <label for="name"><strong>Nom :</strong></label>
+        <input type="text" name="name"><br>
+
+        <label for="email"><strong>e-mail :</strong></label>
+        <input type="email" name="email"><br>
+
+        <label for="phone_number"><strong>Téléphone :</strong></label>
+        <input type="tel" name="phone_number"><br>
+
+        <label for="enterprise"><strong>Entreprise :</strong></label>
+        <select name="enterprise">
+            {% for enterprise in liste_entreprise %}
+                <option value="{{ enterprise.id }}">{{ enterprise.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <button type="submit">Enter</button>
+    </form>
+{% endblock content %}
+
+{% set retour = 'client_home' %}

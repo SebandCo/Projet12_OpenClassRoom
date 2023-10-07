@@ -27,6 +27,31 @@ def deconnexion_epicevents_bdd(cursor, db):
 # ------------------------------------------------------------------
 # Partie des clients
 # ------------------------------------------------------------------
+def add_client(client):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            INSERT INTO client (surname, name, email, phone_number, collaborateur_id, enterprise_id)
+            VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    values = (client['surname'],
+              client['name'],
+              client['email'],
+              client['phone_number'],
+              client['collaborateur'],
+              client['enterprise'])
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.IntegrityError:
+        message = "Double Enterprise : Cette entreprise existe déjà"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
+
+
 def client_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
@@ -135,7 +160,8 @@ def enterprise_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
     query = """
-    SELECT enterprise.name,
+    SELECT enterprise.id,
+    enterprise.name,
     enterprise.creation_date
     FROM enterprise
     """
@@ -143,8 +169,9 @@ def enterprise_extract():
     try:
         cursor.execute(query)
         # Transforme le result en dictionnaire pour facilité la lecture
-        results = [{'name': row[0],
-                    'creation_date': row[1]}for row in cursor.fetchall()]
+        results = [{'id': row[0],
+                    'name': row[1],
+                    'creation_date': row[2]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
         results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"
@@ -221,7 +248,12 @@ def add_user(user):
             INSERT INTO collaborateur (surname, name, department, identifiant, password, salt)
             VALUES (%s, %s, %s, %s, %s, %s)
     """
-    values = (user['surname'], user['name'], user['department'], user['identifiant'], user['password'], user['salt'])
+    values = (user['surname'],
+              user['name'],
+              user['department'],
+              user['identifiant'],
+              user['password'],
+              user['salt'])
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query, values)
