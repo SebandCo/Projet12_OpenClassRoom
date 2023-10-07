@@ -43,6 +43,15 @@ def contract_home():
     return render_template("contract_templates/contract_home.html")
 
 
+@app.route("/contract_display")
+def contract_display():
+    results, message = bdd.contract_extract()
+    if len(message) > 0:
+        return render_template("contract_templates/contract_home.html", message=message)
+    else:
+        return render_template("contract_templates/contract_display.html", liste_entreprise=results)
+
+
 # ------------------------------------------------------------------
 # Chemin des entreprises
 # ------------------------------------------------------------------
@@ -53,7 +62,6 @@ def enterprise_home():
 
 @app.route("/enterprise_display")
 def enterprise_display():
-    results = ""
     results, message = bdd.enterprise_extract()
     if len(message) > 0:
         return render_template("enterprise_templates/enterprise_home.html", message=message)

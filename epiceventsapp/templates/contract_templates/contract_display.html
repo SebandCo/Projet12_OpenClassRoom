@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Contrat Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Affichage des Contrats
+{% endblock en_tete %}
+        
+{% block content %}
+    Voici la liste des contrats : 
+    <table>
+        <caption>Liste des contrats</caption>
+        <tr>
+            <th>Client</th>
+            <th>Montant total</th>
+            <th>Montant restant</th>
+            <th>Contrat signé</th>
+        </tr>
+        {% for contrat in liste_contract %}
+            <tr>
+                <td>{{contrat.client}}</td>
+                <td>{{contrat.total}}</td>
+                <td>{{contrat.amount_be_paid}}</td>
+                <td>{{contrat.signature}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+{% endblock content %}

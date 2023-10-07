@@ -24,6 +24,9 @@ def deconnexion_epicevents_bdd(cursor, db):
     return
 
 
+# ------------------------------------------------------------------
+# Partie des clients
+# ------------------------------------------------------------------
 def client_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
@@ -44,6 +47,7 @@ def client_extract():
         cursor.execute(query)
         results = cursor.fetchall()
     except mysql.connector.Error as err:
+        results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"
 
     deconnexion_epicevents_bdd(cursor, db)
@@ -51,13 +55,9 @@ def client_extract():
     return results, message
 
 
-def contract_extract():
-    db, cursor = connexion_epicevents_bdd("database_select_only")
-
-    deconnexion_epicevents_bdd(cursor, db)
-    return
-
-
+# ------------------------------------------------------------------
+# Partie des événements
+# ------------------------------------------------------------------
 def event_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
 
@@ -73,7 +73,7 @@ def enterprise_extract():
     message = ""
     query = """
     SELECT enterprise.name,
-    enterprise.creation_date,
+    enterprise.creation_date
     FROM enterprise
     """
     # Essaye d'executer la requête SQL:
@@ -82,6 +82,37 @@ def enterprise_extract():
         # Transforme le result en dictionnaire pour facilité la lecture
         results = [{'name': row[0],
                     'creation_date': row[1]}for row in cursor.fetchall()]
+    except mysql.connector.Error as err:
+        results = ""
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
+
+    deconnexion_epicevents_bdd(cursor, db)
+
+    return results, message
+
+
+# ------------------------------------------------------------------
+# Partie des contrats
+# ------------------------------------------------------------------
+def contract_extract():
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT contract.total_amount_contract,
+    contract.amount_be_paid,
+    contract.signature_contract,
+    client.complet_name AS complet_name
+    FROM contract
+    JOIN client on contract.client_id = client.id
+    """
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query)
+        # Transforme le result en dictionnaire pour facilité la lecture
+        results = [{'total': row[0],
+                    'amount_be_paid': row[1],
+                    'signature': row[2],
+                    'client': row[3]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
         results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"

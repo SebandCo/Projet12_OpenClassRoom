@@ -5,11 +5,12 @@
 {% endblock title %}
 
 {% block en_tete %}
-    Gestion des Contrat
+    Gestion des Contrats
 {% endblock en_tete %}
         
 {% block content %}
     Où voulez vous aller : 
     <p>
+        <a href="{{ url_for('contract_display') }}">Affichage des contrats</a></br>
     </p>
 {% endblock content %}
