@@ -83,6 +83,7 @@ def enterprise_extract():
         results = [{'name': row[0],
                     'creation_date': row[1]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
+        results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"
 
     deconnexion_epicevents_bdd(cursor, db)
@@ -110,6 +111,7 @@ def user_extract():
                     'department': row[1],
                     'identifiant': row[2]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
+        results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"
 
     deconnexion_epicevents_bdd(cursor, db)
@@ -137,7 +139,7 @@ def add_user(user):
     return message
 
 
-def control_user_bdd(identifiant, password):
+def control_user_bdd(identifiant):
     message = ""
     db, cursor = connexion_epicevents_bdd("database_select_only")
     # Préparez la requête SQL
