@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Client Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Affichage des Clients
+{% endblock en_tete %}
+        
+{% block content %}
+    Voici la liste des clients : 
+    <table>
+        <caption>Liste des clients</caption>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Créé le</th>
+            <th>Dernière mise à jour</th>
+            <th>Collaborateur dédié</th>
+            <th>Entreprise</th>
+        </tr>
+        {% for client in liste_client %}
+            <tr>
+                <td>{{client.complet_name}}</td>
+                <td>{{client.email}}</td>
+                <td>{{client.phone_number}}</td>
+                <td>{{client.creation_date}}</td>
+                <td>{{client.last_update}}</td>
+                <td>{{client.collaborateur}}</td>
+                <td>{{client.enterprise}}</td>
+            </tr>
+        {%endfor%}
+    </table>
+{% endblock content %}

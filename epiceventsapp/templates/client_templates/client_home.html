@@ -5,11 +5,12 @@
 {% endblock title %}
 
 {% block en_tete %}
-    Gestion des Client
+    Gestion des Clients
 {% endblock en_tete %}
         
 {% block content %}
     Où voulez vous aller : 
     <p>
+        <a href="{{ url_for('client_display') }}">Affichage des clients</a></br>
     </p>
 {% endblock content %}

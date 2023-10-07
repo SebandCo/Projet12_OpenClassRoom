@@ -45,7 +45,13 @@ def client_extract():
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query)
-        results = cursor.fetchall()
+        results = [{'email': row[0],
+                    'complet_name': row[1],
+                    'phone_number': row[2],
+                    'creation_date': row[3],
+                    'last_update': row[4],
+                    'collaborateur': row[5],
+                    'enterprise': row[6]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
         results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"

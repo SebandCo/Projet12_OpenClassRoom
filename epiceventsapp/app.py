@@ -42,6 +42,15 @@ def event_home():
 # ------------------------------------------------------------------
 # Chemin des clients
 # ------------------------------------------------------------------
+@app.route("/client_display")
+def client_display():
+    results, message = bdd.client_extract()
+    if len(message) > 0:
+        return render_template("client_templates/client_home.html", message=message)
+    else:
+        return render_template("client_templates/client_display.html", liste_client=results)
+
+
 @app.route("/client_home")
 def client_home():
     return render_template("client_templates/client_home.html")
@@ -117,5 +126,8 @@ def user_creation():
     return render_template("user_templates/user_creation.html")
 
 
+# ------------------------------------------------------------------
+# Autres
+# ------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True)
