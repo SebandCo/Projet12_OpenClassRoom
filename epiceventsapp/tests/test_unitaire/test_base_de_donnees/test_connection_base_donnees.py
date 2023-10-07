@@ -9,7 +9,7 @@ config.read('config.ini')
 
 def test_database_connection():
     try:
-        db, cursor = exchange_bdd.connexion_epicevents_bdd("database_identification")
+        db, cursor = exchange_bdd.connexion_epicevents_bdd("database_select_only")
         cursor = db.cursor()
         cursor.execute("SELECT 1")
     except mysql.connector.Error as error:

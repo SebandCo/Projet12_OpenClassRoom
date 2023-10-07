@@ -111,6 +111,26 @@ def event_extract():
 # ------------------------------------------------------------------
 # Partie des entreprises
 # ------------------------------------------------------------------
+def add_enterprise(enterprise):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            INSERT INTO enterprise (name)
+            VALUES (%s)
+    """
+    values = (enterprise['name'], )
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.IntegrityError:
+        message = "Double Enterprise : Cette entreprise existe déjà"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
+
+
 def enterprise_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""

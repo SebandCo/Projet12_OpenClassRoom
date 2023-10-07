@@ -12,5 +12,8 @@
     Où voulez vous aller : 
     <p>
         <a href="{{ url_for('enterprise_display') }}">Affichage des entreprises</a></br>
+        <a href="{{ url_for('enterprise_creation') }}">Création d'entreprise</a></br>
     </p>
 {% endblock content %}
+
+{% set retour = 'home' %}

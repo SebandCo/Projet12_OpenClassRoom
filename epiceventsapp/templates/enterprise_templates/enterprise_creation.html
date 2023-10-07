@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Entreprise Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Affichage des Entreprises
+{% endblock en_tete %}
+        
+{% block content %}
+    Merci de remplir les différents champs pour la création
+    <form action = "enterprise_creation" method="post">
+        
+        <label for="name"><strong>Nom :</strong></label>
+        <input type="text" name="name"><br>
+
+        <button type="submit">Enter</button>
+    </form>
+{% endblock content %}
+
+{% set retour = 'enterprise_home' %}

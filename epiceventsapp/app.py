@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import exchange_bdd as bdd
 import user_app as userapp
+import enterprise_app as enterpriseapp
 
 
 app = Flask(__name__)
@@ -20,6 +21,11 @@ def acceuil():
         return render_template("home.html")
     else:
         return render_template("index.html", message=error_message)
+
+
+@app.route("/home")
+def home():
+    return render_template("home.html")
 
 
 # ------------------------------------------------------------------
@@ -88,6 +94,25 @@ def enterprise_display():
         return render_template("enterprise_templates/enterprise_home.html", message=message)
     else:
         return render_template("enterprise_templates/enterprise_display.html", liste_entreprise=results)
+
+
+@app.route("/enterprise_creation", methods=["POST", "GET"])
+def enterprise_creation():
+    if request.method == "POST":
+        # Controle que les données saisies sont correctes
+        enterprise, message_request = enterpriseapp.enterprise_creation(request)
+        if len(message_request) > 0:
+            return render_template("enterprise_templates/enterprise_creation.html", message=message_request)
+        else:
+            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
+            message_bdd = bdd.add_enterprise(enterprise)
+            if message_bdd == "":
+                message = f"L'entreprise {enterprise['name']} a été rajouté à la base de données"
+                return render_template("enterprise_templates/enterprise_home.html", message=message)
+            else:
+                return render_template("enterprise_templates/enterprise_creation.html", message=message_bdd)
+
+    return render_template("enterprise_templates/enterprise_creation.html")
 
 
 # ------------------------------------------------------------------

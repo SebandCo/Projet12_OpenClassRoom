@@ -39,3 +39,11 @@ def mock_user():
             salt,
             "Super_password"]
     return user
+
+
+# Création d'un mock pour l'objet request
+@pytest.fixture
+def mock_enterprise():
+    enterprise = [1,
+                  "Super Entreprise"]
+    return enterprise
