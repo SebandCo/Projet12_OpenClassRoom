@@ -13,6 +13,7 @@ app.secret_key = "motdepassesecret"
 
 MESSAGEREDIRECT = "- No Authorisation : Vous n'avez pas les droits nécessaires pour accéder à cette page."
 MESSAGENOFOUND = "- No Concordance: La requête n'a trouvé pas été trouvé"
+MESSAGEDELETE = "L'utilisateur a été supprimé"
 
 
 # Permet d'envoyer session par défault pour chaque template
@@ -261,7 +262,7 @@ def enterprise_creation():
 
 
 # ------------------------------------------------------------------
-# Chemin des utilisateurs - Menu - Accès - Création - Roles - Modif
+# Chemin des utilisateurs - Menu - Accès - Création - Roles - Modif - Delete
 # ------------------------------------------------------------------
 @app.route("/user_home")
 @login_required
@@ -270,8 +271,20 @@ def user_home():
     return render_template("user_templates/user_home.html")
 
 
+@app.route("/user_delete/<int:user_id>")
+@login_required
+@requires_roles('management')
+def user_delete(user_id):
+    message = bdd.delete_user(user_id)
+    if len(message) > 0:
+        return render_template("user_templates/user_home.html", message=message)
+    else:
+        return render_template("user_templates/user_home.html", message=MESSAGEDELETE)
+
+
 @app.route("/user_edit/<int:user_id>", methods=["GET", "POST"])
 @login_required
+@requires_roles('management')
 def user_edit(user_id):
     if request.method == "POST":
         # Controle que les données saisies sont correctes

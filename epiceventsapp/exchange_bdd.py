@@ -333,6 +333,26 @@ def user_id_extract(user_id):
     return result, message
 
 
+def delete_user(user_id):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            DELETE FROM collaborateur
+            WHERE id=%s
+    """
+    values = (user_id,)
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.Error as err:
+        message = f"Erreur {err.errno}"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
+
+
 def edit_user(user):
     message = ""
     db, cursor = connexion_epicevents_bdd("database")

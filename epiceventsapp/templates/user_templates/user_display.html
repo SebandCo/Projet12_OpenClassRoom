@@ -28,7 +28,7 @@
                     <td><a href="{{ url_for('user_edit', user_id=collaborateur.id) }}">Modifier</a></td>
                 {% endif %}
                 {% if collaborateur.id != session['id'] %}
-                    <td><a href="{{ url_for('user_edit', user_id=collaborateur.id) }}">Supprimer</a></td>
+                <td><a href="{{ url_for('user_delete', user_id=collaborateur.id) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</a></td>
                 {% endif %}
             </tr>
         {%endfor%}
