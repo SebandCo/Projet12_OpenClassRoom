@@ -142,7 +142,7 @@ def event_extract():
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query)
-        # Transforme le result en dictionnaire pour facilité la lecture
+        # Transforme le result en dictionnaire pour faciliter la lecture
         results = [{'id': row[0],
                     'name': row[1],
                     'contract_id': row[2],
@@ -199,7 +199,7 @@ def enterprise_extract():
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query)
-        # Transforme le result en dictionnaire pour facilité la lecture
+        # Transforme le result en dictionnaire pour faciliter la lecture
         results = [{'id': row[0],
                     'name': row[1],
                     'creation_date': row[2]}for row in cursor.fetchall()]
@@ -230,7 +230,7 @@ def contract_extract():
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query)
-        # Transforme le result en dictionnaire pour facilité la lecture
+        # Transforme le result en dictionnaire pour faciliter la lecture
         results = [{'id': row[0],
                     'total': row[1],
                     'amount_be_paid': row[2],
@@ -275,7 +275,8 @@ def user_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
     query = """
-    SELECT collaborateur.complet_name,
+    SELECT collaborateur.id,
+    collaborateur.complet_name,
     collaborateur.department,
     collaborateur.identifiant
     FROM collaborateur
@@ -283,10 +284,11 @@ def user_extract():
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query)
-        # Transforme le result en dictionnaire pour facilité la lecture
-        results = [{'complet_name': row[0],
-                    'department': row[1],
-                    'identifiant': row[2]}for row in cursor.fetchall()]
+        # Transforme le result en dictionnaire pour faciliter la lecture
+        results = [{'id': row[0],
+                    'complet_name': row[1],
+                    'department': row[2],
+                    'identifiant': row[3]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
         results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"
@@ -294,6 +296,66 @@ def user_extract():
     deconnexion_epicevents_bdd(cursor, db)
 
     return results, message
+
+
+def user_id_extract(user_id):
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT collaborateur.id,
+    collaborateur.surname,
+    collaborateur.name,
+    collaborateur.department,
+    collaborateur.identifiant
+    FROM collaborateur
+    WHERE collaborateur.id = %s
+    """
+    values = (user_id,)
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        row = cursor.fetchone()
+        if row is None:
+            result = None
+        else:
+            # Transforme le result en dictionnaire pour faciliter la lecture
+            result = {'id': row[0],
+                      'surname': row[1],
+                      'name': row[2],
+                      'department': row[3],
+                      'identifiant': row[4]}
+    except mysql.connector.Error as err:
+        result = ""
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
+
+    deconnexion_epicevents_bdd(cursor, db)
+
+    return result, message
+
+
+def edit_user(user):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            UPDATE collaborateur
+            SET surname = %s, name = %s, department = %s, identifiant = %s
+            WHERE id=%s
+    """
+    values = (user['surname'],
+              user['name'],
+              user['department'],
+              user['identifiant'],
+              user['id'])
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.Error as err:
+        message = f"Erreur {err.errno}"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
 
 
 def add_user(user):

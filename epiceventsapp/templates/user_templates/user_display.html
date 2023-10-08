@@ -16,12 +16,20 @@
             <th>Nom</th>
             <th>Identifiant</th>
             <th>Equipe</th>
+            <th>Modifier</th>
+            <th>Supprimer</th>
         </tr>
         {% for collaborateur in liste_user %}
             <tr>
                 <td>{{collaborateur.complet_name}}</td>
                 <td>{{collaborateur.identifiant}}</td>
                 <td>{{collaborateur.department}}</td>
+                {% if collaborateur.id != session['id'] %}
+                    <td><a href="{{ url_for('user_edit', user_id=collaborateur.id) }}">Modifier</a></td>
+                {% endif %}
+                {% if collaborateur.id != session['id'] %}
+                    <td><a href="{{ url_for('user_edit', user_id=collaborateur.id) }}">Supprimer</a></td>
+                {% endif %}
             </tr>
         {%endfor%}
     </table>

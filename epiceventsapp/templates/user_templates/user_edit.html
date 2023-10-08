@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Utilisateur Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Modification des Utilisateurs
+{% endblock en_tete %}
+        
+{% block content %}
+    Merci de modifier les champs souhaités
+    <form action = "/user_edit/{{ user.id }}" method="post">
+        
+        <label for="surname"><strong>Prénom :</strong></label>
+        <input type="text" name="surname" value="{{ user.surname }}"><br>
+
+        <label for="name"><strong>Nom :</strong></label>
+        <input type="text" name="name" value="{{ user.name }}"><br>
+        
+        <label for="department"><strong>Equipe :</strong></label><br>
+        <input type="radio" name="department" value="management" {% if user.department == 'management' %}checked{% endif %}/>Gestion<br>
+        <input type="radio" name="department" value="commercial" {% if user.department == 'commercial' %}checked{% endif %}/>Commerciale<br>
+        <input type="radio" name="department" value="support" {% if user.department == 'support' %}checked{% endif %}/>Support<br>
+
+        <label for="identifiant"><strong>Identifiant de connexion :</strong></label>
+        <input type="text" name="identifiant" value="{{ user.identifiant }}"><br>
+
+        <button type="submit">Valider les modifications</button>
+    </form>
+{% endblock content %}
+
+{% set retour = 'user_display' %}

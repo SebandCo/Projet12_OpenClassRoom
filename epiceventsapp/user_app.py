@@ -103,3 +103,46 @@ def user_creation(request):
         user = ""
 
     return user, message
+
+
+def user_edit(request, user_id):
+    message = ""
+
+    # Récupération des différents champs
+    surname = request.form.get("surname")
+    name = request.form.get("name")
+    department = request.form.get("department")
+    identifiant = request.form.get("identifiant")
+
+    # Controle de la valeur du champs "surname"
+    if not surname:
+        message += "- No Surname : Vous avez oublié de renseigner le prénom\n"
+    elif len(surname) > MAX_LEN_VALUE:
+        message += f"- Too Long Surname : Le prénom est limité à {MAX_LEN_VALUE}\n"
+
+    # Controle de la valeur du champs "name"
+    if not name:
+        message += "- No Name : Vous avez oublié de renseigner le nom\n"
+    elif len(name) > MAX_LEN_VALUE:
+        message += f"- Too Long Name : Le nom est limité à {MAX_LEN_VALUE}\n"
+
+    # Controle de la valeur du champs "department"
+    if not department:
+        message += "- No Department : Vous avez oublié de renseigner l'équipe\n"
+
+    # Controle de la valeur du champs "identifiant"
+    if not identifiant:
+        message += "- No Identifiant : Vous avez oublié de renseigner l'identifiant\n"
+    elif len(identifiant) > MAX_LEN_VALUE:
+        message += f"- Too Long Identifiant : L'identifiant est limité à {MAX_LEN_VALUE}\n"
+
+    if message == "":
+        user = {"surname": surname,
+                "name": name,
+                "department": department,
+                "identifiant": identifiant,
+                "id": user_id}
+    else:
+        user = ""
+
+    return user, message

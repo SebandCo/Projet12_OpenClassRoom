@@ -11,7 +11,8 @@ app = Flask(__name__)
 # remplacer motdepassesecret par votre mot de passe
 app.secret_key = "motdepassesecret"
 
-MESSAGEREDIRECT = "No Authorisation : Vous n'avez pas les droits nécessaires pour accéder à cette page."
+MESSAGEREDIRECT = "- No Authorisation : Vous n'avez pas les droits nécessaires pour accéder à cette page."
+MESSAGENOFOUND = "- No Concordance: La requête n'a trouvé pas été trouvé"
 
 
 # Permet d'envoyer session par défault pour chaque template
@@ -260,13 +261,49 @@ def enterprise_creation():
 
 
 # ------------------------------------------------------------------
-# Chemin des utilisateurs - Menu - Accès - Création - Roles
+# Chemin des utilisateurs - Menu - Accès - Création - Roles - Modif
 # ------------------------------------------------------------------
 @app.route("/user_home")
 @login_required
 @requires_roles('management')
 def user_home():
     return render_template("user_templates/user_home.html")
+
+
+@app.route("/user_edit/<int:user_id>", methods=["GET", "POST"])
+@login_required
+def user_edit(user_id):
+    if request.method == "POST":
+        # Controle que les données saisies sont correctes
+        user, message_request = userapp.user_edit(request, user_id)
+        if len(message_request) > 0:
+            user, message = bdd.user_id_extract(user_id)
+            if user is None:
+                message += message_request
+                message += MESSAGENOFOUND
+                return render_template("user_templates/user_home.html", message=message)
+            else:
+                return render_template("user_templates/user_edit.html", user=user, message=message_request)
+        else:
+            message_bdd = bdd.edit_user(user)
+            if message_bdd == "":
+                message = f"L'utilisateur {user['surname']}, {user['name']} a été mis à jour dans la base de données"
+                return render_template("user_templates/user_home.html", message=message)
+            else:
+                user, message = bdd.user_id_extract(user_id)
+                if user is None:
+                    message += message_request
+                    message += MESSAGENOFOUND
+                    return render_template("user_templates/user_home.html", message=message)
+                else:
+                    return render_template("user_templates/user_edit.html", user=user, message=message_request)
+    else:
+        user, message = bdd.user_id_extract(user_id)
+        if user is None:
+            message += MESSAGENOFOUND
+            return render_template("user_templates/user_home.html", message=message)
+        else:
+            return render_template("user_templates/user_edit.html", user=user)
 
 
 @app.route("/user_display")

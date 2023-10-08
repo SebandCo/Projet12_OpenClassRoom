@@ -47,7 +47,7 @@ def client_creation(request):
         message += "- No Enterprise : Vous avez oublié de renseigner l'entreprise\n"
 
     if message == "":
-        print("test")
+
         client = {"surname": surname,
                   "name": name,
                   "email": email,
