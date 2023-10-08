@@ -3,6 +3,7 @@ import exchange_bdd as bdd
 import user_app as userapp
 import enterprise_app as enterpriseapp
 import client_app as clientapp
+import contract_app as contractapp
 
 
 app = Flask(__name__)
@@ -96,6 +97,37 @@ def client_home():
 @app.route("/contract_home")
 def contract_home():
     return render_template("contract_templates/contract_home.html")
+
+
+@app.route("/contract_creation", methods=["POST", "GET"])
+def contract_creation():
+    if request.method == "POST":
+        # Controle que les données saisies sont correctes
+        contract, message_request = contractapp.contract_creation(request)
+        if len(message_request) > 0:
+            results_client, message_extract = bdd.client_extract()
+            message_request += message_extract
+            return render_template("contract_templates/contract_creation.html",
+                                   liste_client=results_client,
+                                   message=message_request)
+        else:
+            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
+            message_bdd = bdd.add_contract(contract)
+            if message_bdd == "":
+                message = "Le contrat a été rajouté à la base de données"
+                return render_template("contract_templates/contract_home.html", message=message)
+            else:
+                results_client, message_extract = bdd.client_extract()
+                message_request += message_extract
+                return render_template("contract_templates/contract_creation.html",
+                                       liste_client=results_client,
+                                       message=message_bdd)
+    else:
+        results_client, message = bdd.client_extract()
+        if len(message) > 0:
+            return render_template("contract_templates/contract_home.html", message=message)
+        else:
+            return render_template("contract_templates/contract_creation.html", liste_client=results_client)
 
 
 @app.route("/contract_display")

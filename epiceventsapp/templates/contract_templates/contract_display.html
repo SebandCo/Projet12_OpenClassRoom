@@ -23,7 +23,11 @@
                 <td>{{contrat.client}}</td>
                 <td>{{contrat.total}}</td>
                 <td>{{contrat.amount_be_paid}}</td>
-                <td>{{contrat.signature}}</td>
+                {% if contrat.signature == 0 %}
+                    <td>Non</td>
+                {%else%}
+                    <td>Oui</td>
+                {%endif%}
             </tr>
         {%endfor%}
     </table>

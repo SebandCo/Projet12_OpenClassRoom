@@ -56,7 +56,8 @@ def client_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
     query = """
-    SELECT client.email,
+    SELECT client.id,
+    client.email,
     client.complet_name,
     client.phone_number,
     client.creation_date,
@@ -70,13 +71,14 @@ def client_extract():
     # Essaye d'executer la requête SQL:
     try:
         cursor.execute(query)
-        results = [{'email': row[0],
-                    'complet_name': row[1],
-                    'phone_number': row[2],
-                    'creation_date': row[3],
-                    'last_update': row[4],
-                    'collaborateur': row[5],
-                    'enterprise': row[6]}for row in cursor.fetchall()]
+        results = [{'id': row[0],
+                    'email': row[1],
+                    'complet_name': row[2],
+                    'phone_number': row[3],
+                    'creation_date': row[4],
+                    'last_update': row[5],
+                    'collaborateur': row[6],
+                    'enterprise': row[7]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
         results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"
@@ -210,6 +212,29 @@ def contract_extract():
     deconnexion_epicevents_bdd(cursor, db)
 
     return results, message
+
+
+def add_contract(contract):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            INSERT INTO contract (client_id, total_amount_contract, amount_be_paid, signature_contract)
+            VALUES (%s, %s, %s, %s)
+    """
+    values = (contract['client'],
+              contract['total_amount_contract'],
+              contract['amount_be_paid'],
+              contract['signature_contract'])
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.IntegrityError:
+        message = "Erreur"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
 
 
 # ------------------------------------------------------------------

@@ -33,6 +33,17 @@ def mock_client_request():
 
 # Création d'un mock pour l'objet request
 @pytest.fixture
+def mock_contract_request():
+    request = mock.Mock()
+    request.form = {"client": 1,
+                    "total_amount_contract": 2000,
+                    "amount_be_paid": 200,
+                    "signature_contract": 1}
+    return request
+
+
+# Création d'un mock pour l'objet request
+@pytest.fixture
 def mock_enterprise_request():
     request = mock.Mock()
     request.form = {"name": "Entreprise Test"}
