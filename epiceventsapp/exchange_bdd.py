@@ -91,6 +91,35 @@ def client_extract():
 # ------------------------------------------------------------------
 # Partie des événements
 # ------------------------------------------------------------------
+def add_event(event):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            INSERT INTO event (name, contract_id, client_id, event_date_start,
+            event_date_end, support_contact, location, attendees, notes)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    values = (event['name'],
+              event['contract'],
+              event['client'],
+              event['event_date_start'],
+              event['event_date_end'],
+              event['support_contact'],
+              event['location'],
+              event['attendees'],
+              event['notes'])
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.IntegrityError:
+        message = "Double Event : Cette événement existe déjà"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
+
+
 def event_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
@@ -190,7 +219,8 @@ def contract_extract():
     db, cursor = connexion_epicevents_bdd("database_select_only")
     message = ""
     query = """
-    SELECT contract.total_amount_contract,
+    SELECT contract.id,
+    contract.total_amount_contract,
     contract.amount_be_paid,
     contract.signature_contract,
     client.complet_name AS complet_name
@@ -201,10 +231,11 @@ def contract_extract():
     try:
         cursor.execute(query)
         # Transforme le result en dictionnaire pour facilité la lecture
-        results = [{'total': row[0],
-                    'amount_be_paid': row[1],
-                    'signature': row[2],
-                    'client': row[3]}for row in cursor.fetchall()]
+        results = [{'id': row[0],
+                    'total': row[1],
+                    'amount_be_paid': row[2],
+                    'signature': row[3],
+                    'client': row[4]}for row in cursor.fetchall()]
     except mysql.connector.Error as err:
         results = ""
         message = f"Erreur {err.errno} : La requete n'a pas abouti"

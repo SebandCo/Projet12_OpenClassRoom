@@ -3,6 +3,7 @@ import exchange_bdd as bdd
 import user_app as userapp
 import enterprise_app as enterpriseapp
 import client_app as clientapp
+import event_app as eventapp
 import contract_app as contractapp
 
 
@@ -42,6 +43,50 @@ def event_display():
         return render_template("event_templates/event_display.html", liste_event=results)
 
 
+@app.route("/event_creation", methods=["POST", "GET"])
+def event_creation():
+    if request.method == "POST":
+        # Controle que les données saisies sont correctes
+        event, message_request = eventapp.event_creation(request)
+        if len(message_request) > 0:
+            results_contract, message_enterprise = bdd.enterprise_extract()
+            message_request += message_enterprise
+            results_client, message_client = bdd.client_extract()
+            message_request += message_client
+            return render_template("event_templates/event_creation.html",
+                                   liste_contract=results_contract,
+                                   liste_client=results_client,
+                                   message=message_request)
+        else:
+            message_bdd = bdd.add_event(event)
+            if message_bdd == "":
+                message = f"L'événement' {event['name']} a été rajouté à la base de données"
+                return render_template("event_templates/event_home.html", message=message)
+            else:
+                results_contract, message_enterprise = bdd.enterprise_extract()
+                message_request += message_enterprise
+                results_client, message_client = bdd.client_extract()
+                message_request += message_client
+                return render_template("event_templates/event_creation.html",
+                                       liste_contract=results_contract,
+                                       liste_client=results_client,
+                                       message=message_bdd)
+    else:
+        results_contract, message = bdd.contract_extract()
+        if len(message) > 0:
+            return render_template("event_templates/event_home.html", message=message)
+        else:
+            results_client, message = bdd.client_extract()
+            if len(message) > 0:
+                return render_template("event_templates/event_home.html", message=message)
+            else:
+                print(results_contract)
+                print(results_client)
+                return render_template("event_templates/event_creation.html",
+                                       liste_contract=results_contract,
+                                       liste_client=results_client)
+
+
 @app.route("/event_home")
 def event_home():
     return render_template("event_templates/event_home.html")
@@ -69,7 +114,6 @@ def client_creation():
             message_request += message_extract
             return render_template("client_templates/client_creation.html", liste_entreprise=results, message=message_request)
         else:
-            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
             message_bdd = bdd.add_client(client)
             if message_bdd == "":
                 message = f"Le client {client['surname']}, {client['name']} a été rajouté à la base de données"
@@ -164,7 +208,6 @@ def enterprise_creation():
         if len(message_request) > 0:
             return render_template("enterprise_templates/enterprise_creation.html", message=message_request)
         else:
-            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
             message_bdd = bdd.add_enterprise(enterprise)
             if message_bdd == "":
                 message = f"L'entreprise {enterprise['name']} a été rajouté à la base de données"
@@ -200,7 +243,6 @@ def user_creation():
         if len(message_request) > 0:
             return render_template("user_templates/user_creation.html", message=message_request)
         else:
-            # Controle que l'utilisateur a été correctement ajouté à la base de donnée
             message_bdd = bdd.add_user(user)
             if message_bdd == "":
                 message = f"L'utilisateur {user['surname']}, {user['name']} a été rajouté à la base de données"

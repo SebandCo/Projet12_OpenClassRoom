@@ -3,6 +3,7 @@ from unittest import mock
 import hashlib
 import binascii
 import os
+from datetime import date
 
 
 # Création d'un mock pour l'objet request
@@ -39,6 +40,22 @@ def mock_contract_request():
                     "total_amount_contract": 2000,
                     "amount_be_paid": 200,
                     "signature_contract": 1}
+    return request
+
+
+# Création d'un mock pour l'objet request
+@pytest.fixture
+def mock_event_request():
+    request = mock.Mock()
+    request.form = {"name": "Nom de l'event",
+                    "contract": 1,
+                    "client": 1,
+                    "event_date_start": date(2020, 1, 1),
+                    "event_date_end": date(2022, 1, 1),
+                    "support_contact": "Mr Smith",
+                    "location": "Maison",
+                    "attendees": 250,
+                    "notes": "Une note comme ça"}
     return request
 
 

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Evénements Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Création des Evénements
+{% endblock en_tete %}
+        
+{% block content %}
+    Merci de remplir les différents champs pour la création
+    <form action = "event_creation" method="post">
+        
+        <label for="name"><strong>Nom :</strong></label>
+        <input type="text" name="name"><br>
+       
+        <label for="contract"><strong>Contrat :</strong></label>
+        <select name="contract">
+            {% for contract in liste_contract %}
+                <option value="{{ contract.id }}">{{ contract.id }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="client"><strong>Client :</strong></label>
+        <select name="client">
+            {% for client in liste_client %}
+                <option value="{{ client.id }}">{{ client.complet_name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="event_date_start"><strong>Date de début :</strong></label>
+        <input type="date" name="event_date_start"><br>
+
+        <label for="event_date_end"><strong>Date de fin :</strong></label>
+        <input type="date" name="event_date_end"><br>
+
+        <label for="support_contact"><strong>Contact sur place :</strong></label>
+        <input type="text" name="support_contact"><br>
+
+        <label for="location"><strong>Adresse :</strong></label>
+        <input type="text" name="location"><br>
+
+        <label for="attendees"><strong>Nombre de place :</strong></label>
+        <input type="number" name="attendees"><br>
+
+        <label for="notes"><strong>Notes :</strong></label>
+        <input type="text" name="notes"><br>
+
+        <button type="submit">Enter</button>
+    </form>
+{% endblock content %}
+
+{% set retour = 'event_home' %}
