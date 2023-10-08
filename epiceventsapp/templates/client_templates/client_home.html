@@ -12,7 +12,9 @@
     Où voulez vous aller : 
     <p>
         <a href="{{ url_for('client_display') }}">Affichage des clients</a></br>
-        <a href="{{ url_for('client_creation') }}">Création de client</a></br>
+        {% if session['user_role'] == 'commercial' %}
+            <a href="{{ url_for('client_creation') }}">Création de client</a></br>
+        {% endif %}
     </p>
 {% endblock content %}
 

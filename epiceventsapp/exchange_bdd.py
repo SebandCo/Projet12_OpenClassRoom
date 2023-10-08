@@ -335,7 +335,6 @@ def control_user_bdd(identifiant):
     try:
         cursor.execute(query, value)
         user_result = cursor.fetchone()
-
     except mysql.connector.Error as err:
         user_result = None
         message = f"Erreur {err.errno}"

@@ -1,3 +1,5 @@
+from flask import session
+
 MAX_LEN_VALUE = 70
 MAX_LEN_VALUE_PHONE = 20
 MAX_LEN_VALUE_EMAIL = 255
@@ -38,17 +40,7 @@ def client_creation(request):
         message += f"- Too Long Phone : Le numéro de téléphone est limité à {MAX_LEN_VALUE_PHONE}\n"
 
     # Récupération du champs "collaborateur"
-    # Manque collaborateur automatique
-    ####
-    ####
-    collaborateur = 1
-    ########
-    ########
-    ########
-    ########
-    ########
-    ########
-    ########
+    collaborateur = session['id']
 
     # Récupération du champs "enterprise"
     if not enterprise:

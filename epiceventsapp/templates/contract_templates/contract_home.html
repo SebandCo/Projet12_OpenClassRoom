@@ -12,7 +12,9 @@
     Où voulez vous aller : 
     <p>
         <a href="{{ url_for('contract_display') }}">Affichage des contrats</a></br>
-        <a href="{{ url_for('contract_creation') }}">Création de contrat</a></br>
+        {% if session['user_role'] == 'management' %}
+            <a href="{{ url_for('contract_creation') }}">Création de contrat</a></br>
+        {% endif %}
     </p>
 {% endblock content %}
 

@@ -2,6 +2,7 @@ import os
 import hashlib
 import binascii
 import exchange_bdd as bdd
+from flask import session
 
 MAX_LEN_VALUE = 70
 
@@ -14,6 +15,8 @@ def control_user(identifiant, password):
         valid_identifiant = False
         message = "- User Unknown : L'utilisateur n'est pas connu de la base de données"
     else:
+        user_id = user_result[0]
+        user_role = user_result[4]
         user_salt = user_result[7]
         user_password = user_result[5]
         password_encode = password.encode('utf-8')
@@ -25,6 +28,8 @@ def control_user(identifiant, password):
         # Si le mot de passe est correct
         if password_decode == user_password:
             valid_identifiant = True
+            session['user_role'] = user_role
+            session['id'] = user_id
         # Si le mot de passe est incorrect
         else:
             valid_identifiant = False

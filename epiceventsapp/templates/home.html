@@ -12,11 +12,17 @@
             <a href="{{ url_for('contract_home') }}">Gestion des contrats</a></br>
             <a href="{{ url_for('event_home') }}">Gestion des événements</a></br>
             <a href="{{ url_for('enterprise_home') }}">Gestion des entreprises</a></br>
-            <a href="{{ url_for('user_home') }}">Gestion des utilisateurs</a></br>
+            {% if session['user_role'] == 'management' %}
+                <a href="{{ url_for('user_home') }}">Gestion des utilisateurs</a></br>
+            {% endif %}
         </p>
         {% if message %}
         <p>{{message}}</p>
         {% endif%}
+
+        <p>
+            <a href="/logout">Déconnexion</a>
+        </p>
 
     </body>
 </html>
