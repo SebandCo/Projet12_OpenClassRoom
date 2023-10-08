@@ -17,17 +17,19 @@
             <th>Montant total</th>
             <th>Montant restant</th>
             <th>Contrat signé</th>
+            <th>Modifier</th>
         </tr>
-        {% for contrat in liste_contract %}
+        {% for contract in liste_contract %}
             <tr>
-                <td>{{contrat.client}}</td>
-                <td>{{contrat.total}}</td>
-                <td>{{contrat.amount_be_paid}}</td>
-                {% if contrat.signature == 0 %}
+                <td>{{contract.client}}</td>
+                <td>{{contract.total}}</td>
+                <td>{{contract.amount_be_paid}}</td>
+                {% if contract.signature == 0 %}
                     <td>Non</td>
                 {%else%}
                     <td>Oui</td>
                 {%endif%}
+                <td><a href="{{ url_for('contract_edit', contract_id=contract.id) }}">Modifier</a></td>
             </tr>
         {%endfor%}
     </table>

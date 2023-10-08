@@ -245,6 +245,68 @@ def contract_extract():
     return results, message
 
 
+def contract_id_extract(contract_id):
+    db, cursor = connexion_epicevents_bdd("database_select_only")
+    message = ""
+    query = """
+    SELECT contract.id,
+    contract.total_amount_contract,
+    contract.amount_be_paid,
+    contract.signature_contract,
+    client.complet_name AS complet_name,
+    client.id AS id
+    FROM contract
+    JOIN client on contract.client_id = client.id
+    WHERE contract.id = %s
+    """
+    values = (contract_id,)
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        row = cursor.fetchone()
+        if row is None:
+            result = None
+        else:
+            # Transforme le result en dictionnaire pour faciliter la lecture
+            result = {'id': row[0],
+                      'total_amount_contract': int(row[1]),
+                      'amount_be_paid': int(row[2]),
+                      'signature_contract': row[3],
+                      'client_name': row[4],
+                      'client_id': row[5]}
+    except mysql.connector.Error as err:
+        result = ""
+        message = f"Erreur {err.errno} : La requete n'a pas abouti"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return result, message
+
+
+def edit_contract(contract):
+    message = ""
+    db, cursor = connexion_epicevents_bdd("database")
+    # Préparez la requête SQL
+    query = """
+            UPDATE contract
+            SET client_id = %s, total_amount_contract = %s, amount_be_paid = %s, signature_contract = %s
+            WHERE id=%s
+    """
+    values = (contract['client'],
+              contract['total_amount_contract'],
+              contract['amount_be_paid'],
+              contract['signature_contract'],
+              contract['contract_id'])
+    # Essaye d'executer la requête SQL:
+    try:
+        cursor.execute(query, values)
+        db.commit()
+    except mysql.connector.Error as err:
+        message = f"Erreur {err.errno}"
+
+    deconnexion_epicevents_bdd(cursor, db)
+    return message
+
+
 def add_contract(contract):
     message = ""
     db, cursor = connexion_epicevents_bdd("database")

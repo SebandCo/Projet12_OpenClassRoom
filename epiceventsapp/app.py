@@ -167,12 +167,59 @@ def client_home():
 
 
 # ------------------------------------------------------------------
-# Chemin des contrats - Menu - Accès - Création - Roles
+# Chemin des contrats - Menu - Accès - Création - Roles - Modif
 # ------------------------------------------------------------------
 @app.route("/contract_home")
 @login_required
 def contract_home():
     return render_template("contract_templates/contract_home.html")
+
+
+@app.route("/contract_edit/<int:contract_id>", methods=["GET", "POST"])
+@login_required
+@requires_roles('management')
+def contract_edit(contract_id):
+    if request.method == "POST":
+        # Controle que les données saisies sont correctes
+        contract, message_request = contractapp.contract_creation(request)
+        contract["contract_id"] = contract_id
+        if len(message_request) > 0:
+            contract, message = bdd.contract_id_extract(contract_id)
+            if contract is None:
+                message += message_request
+                message += MESSAGENOFOUND
+                return render_template("contract_templates/contract_home.html", message=message)
+            else:
+                return render_template("contract_templates/contract_display.html", contract=contract, message=message_request)
+        else:
+            message_bdd = bdd.edit_contract(contract)
+            print(message_bdd)
+            if message_bdd == "":
+                message = "Le contract a été mis à jour dans la base de données"
+                return render_template("contract_templates/contract_home.html", message=message)
+            else:
+                contract, message = bdd.contract_extract()
+                if contract is None:
+                    message += message_bdd
+                    message += MESSAGENOFOUND
+                    return render_template("contract_templates/contract_home.html", message=message)
+                else:
+                    return render_template("contract_templates/contract_display.html",
+                                           liste_contract=contract,
+                                           message=message_bdd)
+    else:
+        contract, message = bdd.contract_id_extract(contract_id)
+        if contract is None:
+            message += MESSAGENOFOUND
+            return render_template("contract_templates/contract_home.html", message=message)
+        else:
+            results_client, message = bdd.client_extract()
+            if len(message) > 0:
+                return render_template("contract_templates/contract_home.html", message=message)
+            else:
+                return render_template("contract_templates/contract_edit.html",
+                                       liste_client=results_client,
+                                       contract=contract)
 
 
 @app.route("/contract_creation", methods=["POST", "GET"])

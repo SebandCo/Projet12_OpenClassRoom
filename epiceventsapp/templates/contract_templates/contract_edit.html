@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Gestion Contrat Epic Events
+{% endblock title %}
+
+{% block en_tete %}
+    Modification des Contrats
+{% endblock en_tete %}
+        
+{% block content %}
+    Merci de modifier les champs souhaités   
+    <form action = "/contract_edit/{{ contract.id}}" method="post">
+        
+        <label for="client"><strong>Client :</strong></label>
+        <select name="client">
+            {% for client in liste_client %}
+                <option value="{{ client.id }}" {% if client.id == contract.client_id %}selected{% endif %}>{{ client.complet_name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="total_amount_contract"><strong>Montant du contrat :</strong></label>
+        <input type="number" name="total_amount_contract" value="{{ contract.total_amount_contract }}"><br>
+
+        <label for="amount_be_paid"><strong>Restant à payer :</strong></label>
+        <input type="number" name="amount_be_paid" value="{{ contract.amount_be_paid }}"><br>
+
+        <label for="signature_contract"><strong>Contrat signé :</strong></label><br>
+        <input type="radio" name="signature_contract" value="1" {% if contract.signature_contract == 1 %}checked{% endif %}/>Oui<br>
+        <input type="radio" name="signature_contract" value="0" {% if contract.signature_contract == 0 %}checked{% endif %}/>Non<br>
+
+        <button type="submit">Enter</button>
+    </form>
+{% endblock content %}
+
+{% set retour = 'contract_display' %}
